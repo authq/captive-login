@@ -1,5 +1,4 @@
-SRC = bin/hlogin
-TESTS = test/*.bats
+TESTS=test/*.bats
 
-test: $(TESTS) $(SRC)
+test: $(TESTS)
 	./test/bats/bats test

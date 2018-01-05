@@ -1,19 +1,4 @@
-load _utils
-
-export PATH=$PATH:./bin
-
-@test "Unknown command" {
-  run hlogin foobar
-  assert_error
-  assert_usage
-  assert_output "foobar"
-}
-
-@test "Help command" {
-  run hlogin --help
-  assert_success
-  assert_usage
-}
+load _common
 
 assert_options () {
   assert_output "USERNAME=test_user"
@@ -55,12 +40,4 @@ assert_options () {
 
   assert_success
   assert_options
-}
-
-@test "Success login with curl client" {
-  run hlogin login \
-    --username test_user \
-    --password test_password
-
-  # assert_success
 }
