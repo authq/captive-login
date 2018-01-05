@@ -42,10 +42,10 @@ login () {
     local code=`_request "${BASE_URL}${LOGIN_ENDPOINT}" "username=${USERNAME}&password=${PASSWORD}"`
     
     if [ $code -eq "${SUCCESS_CODE}" ]; then
-        echo "${CLI_OK}Login was successful"
+        echo "Login was successful"
         return 0
     else
-        echo "${CLI_ERR}Error while logging in"
+        echo "Error while logging in"
         return 1
     fi
 }
