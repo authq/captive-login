@@ -23,7 +23,7 @@ Logout:
 ## INSTALL
 
 ```bash
-wget https://raw.githubusercontent.com/pi0/captive-login/master/bin/clogin
+wget https://raw.githubusercontent.com/authq/captive-login/master/bin/clogin
 chmod +x clogin
 sudo mv clogin /usr/local/bin
 ```
@@ -106,8 +106,8 @@ Available Makefile commands:
 
 - `make test` - Run BATS tests
 - `make install` - Installs `clogin` utility to `/usr/local/bin`
-- `make docker` - Make docker image
-- `make docker-test` - Test docker image functionality
+- `make docker-build` - Build docker image
+- `make docker` - Buikld and test docker image functionality
 
 Feel free forking this repository and making PRs for features and fixes :)
 
