@@ -248,7 +248,9 @@ readconf () {
         key=`echo $line|cut -d '=' -f1`
         val=`echo $line|cut -d '=' -f2`
         if [ ! -z "$key" ] && [ ! -z "$val" ] ; then
-            export $key=$val
+            if [ ! ${!key} ] ; then
+                export $key=$val
+            fi
         fi
     done
 }
@@ -256,6 +258,12 @@ readconf () {
 #------------------------------------------------------
 # Entrypoint
 #------------------------------------------------------
+
+# Try to apply configuarion files from standard locations before parsing options
+for file in "/usr/local/etc/clogin.conf" "/etc/clogin.conf" "~/.clogin.conf"; do
+    [ ! -r $file ] && continue
+    readconf $file
+done
 
 # Default options
 export CONFIG_FILE=${CONFIG_FILE:-"clogin.conf"}
@@ -286,12 +294,6 @@ case $COMMAND in
     '') usage; exit 1 ;;
     *) die "Unknown command: $COMMAND"; exit 1 ;;
 esac
-
-# Try to apply configuarion files from standard locations before parsing options
-for file in "/usr/local/etc/clogin.conf" "/etc/clogin.conf" "~/.clogin.conf"; do
-    [ ! -r $file ] && continue
-    readconf $file
-done
 
 # Parse options
 while [ $# -gt 0 ]; do
