@@ -150,7 +150,7 @@ _request () {
 # Utils
 #------------------------------------------------------
 version () {
-    echo "Headless Login 0.0.1"
+    echo "Headless Login 1.0.0"
 }
 
 usage () {
@@ -159,7 +159,7 @@ usage () {
     cat <<EOF
     Usage: hlogin [login|logout|check] [--help] [OPTION...] 
 
-    Auto HTTP login command for headless environments
+    Automated HTTP login utility for headless environments
 
     Options:
         -u, --username VAL    Set login username

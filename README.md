@@ -2,41 +2,90 @@
 
 > Automated HTTP login utility for headless environments written in pure Bash.
 
+### History
 
-# Usage
+At [Amirkabir](https://www.aut.ac.ir/aut/) university, we have a captive portal (on Mikrotik routers) for internet access. This makes some troubles when a persistent internet connection is needed in LAB servers and headless devices. This utility automates login proccess. I've tried to generalize all params as possible so it can be used in similar environments.
 
-```
-    Usage: hlogin [login|logout|check] [--help] [OPTION...] 
+## Getting started
 
-    Auto HTTP login command for headless environments
+Download script:
 
-    Options:
-        -u, --username VAL    Set login username
-        -p, --password VAL    Set login password
-        -c, --client VAL      Set http client to make requests. (Possible values: auto|curl|wget)
-        --test-url VAL        Set auth test url (Default to "http://icanhazip.com")
-        --base VAL            Set http client base url (Defauts to "https://login.aut.ac.ir")
-        --login-endpoint VAL  Set login endpoint (Defaults to "/login")
-        --logout-endpoint VAL Set logout endpoint (Defaults to "/logout")
-        --allow-empty         Allow using empty username and password
-
-        -h, --help        Display this help message
-        -v, --version     Display version
-
-    Supported environment variables:
-        - USERNAME
-        - PASSWORD
-        - HTTP_CLIENT
-        - TEST_URL
-        - BASE_URL
-        - LOGIN_ENDPOINT
-        - LOGOUT_ENDPOINT
-        - ALLOW_EMPTY
-        - SUCCESS_CODE
-        - CHECK_SUCCESS_CODE
+```bash
+wget https://raw.githubusercontent.com/pi0/headless-login/master/bin/hlogin
+chmod +x hlogin
+sudo mv hlogin /usr/local/bin
 ```
 
-# LICENSE
+Login: 
+
+```bash
+hlogin login -u test -p test
+```
+
+Test internet connectivity:
+
+```bash
+hlogin check
+```
+
+Logout:
+
+```bash
+hlogin logout
+```
+
+## Usage
+
+```bash
+hlogin [login|logout|check] [--help] [OPTION...] 
+```
+
+Options:
+
+Option                   | Description
+-------------------------|------------------------------------------------------------------------
+`-u, --username VAL`     | Set login username
+`-p, --password VAL`     | Set login password
+`-c, --client VAL`       | Set http client to make requests. (Possible values: auto|curl|wget)
+`--test-url VAL`         | Set auth test url (Default to "http://icanhazip.com")
+`--base VAL`             | Set http client base url (Defauts to "https://login.aut.ac.ir")
+`--login-endpoint VAL`   | Set login endpoint (Defaults to "/login")
+`--logout-endpoint VAL`  | Set logout endpoint (Defaults to "/logout")
+`--allow-empty`          | Allow using empty username and password
+`-h, --help`             | Display help message
+`-v, --version`          | Display version
+`-x, --debug`            | Debug mode. Shows all internal invoked commands
+
+## Environment variables
+
+It is possible to use Environment variables instead of arguments to configure hlogin.
+Currently supported environment variables:
+
+- `USERNAME`
+- `PASSWORD`
+- `HTTP_CLIENT`
+- `TEST_URL`
+- `BASE_URL`
+- `LOGIN_ENDPOINT`
+- `LOGOUT_ENDPOINT`
+- `ALLOW_EMPTY`
+- `SUCCESS_CODE`
+- `CHECK_SUCCESS_CODE`
+
+## Development
+
+This project uses [BATS](https://github.com/sstephenson/bats) for automated testing, [DockerFile](https://docs.docker.com/engine/reference/builder) for packaging and [Makefile](https://www.gnu.org/s/make/manual/make.html) for development workflow.
+
+Available Makefile commands:
+
+- **make test** - Run BATS tests
+- **make install** - Installs `hlogin` utility to `/usr/local/bin`
+- **make docker-build** - Make docker image
+- **make docker-check** - Test docker image functionality (Also runs `docker-build`)
+
+Feel free forking this repository and making PRs for features and fixes :)
+
+## LICENSE
 
 ```
     Copyright (C) 2018 Pooya Parsa <pooya@pi0.ir>
