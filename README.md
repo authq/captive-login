@@ -97,10 +97,11 @@ Supported environment variables:
 An alpine based docker image (~4MB) is available for ease of use and deployment.
 
 ```bash
-docker run -it --rm \
-    -e USERNAME="test" \
-    -e PASSWORD="test" \
-    pooya/clogin loop
+docker pull authq/captive-login
+```
+
+```bash
+docker run -it --rm  -e USERNAME="test" -e PASSWORD="test" authq/captive-login loop
 ```
 
 ## DEVELOPMENT
