@@ -1,6 +1,7 @@
-TESTS=test/*.bats
+TESTS=test/clogin.bats
+BIN=bin/clogin
 
-test: $(TESTS)
+test: $(BIN) $(TESTS) 
 	./test/bats/bats test
 
 docker-build: Dockerfile
