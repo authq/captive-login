@@ -2,7 +2,7 @@
 
 ### SYNOPSIS
 
-`clogin [login|logout|test] [--help] [OPTION...]`
+`Usage: clogin login|logout|loop|test [--help] [OPTION...]`
 
 Login:
 `clogin login -u test -p test`
@@ -16,14 +16,14 @@ Logout:
 ## INSTALL
 
 ```bash
-wget https://raw.githubusercontent.com/pi0/headless-login/master/bin/clogin
+wget https://raw.githubusercontent.com/pi0/captive-login/master/bin/clogin
 chmod +x clogin
 sudo mv clogin /usr/local/bin
 ```
 
 ## DESCRIPTION
 
-At [Amirkabir](https://www.aut.ac.ir/aut/) university, we have mikrotik powered captive-portal for internet access. This makes some challenges when a persistent internet connection is needed in headless devices and lab servers.
+At Amirkabir university, we have mikrotik powered captive-portal for internet access. This makes some challenges when a persistent internet connection is needed in headless devices and lab servers.
 
 This utility automates captive-portal login proccess. I've tried to generalize all params as possible so it can be used in similar environments, at least with other mikrotik captive-portals.
 
@@ -35,14 +35,21 @@ For detailed info of how this script works, see [bin/clogin](bin/clogin).
 **Supported options:**
 
 - `-f, --conf` - Path to config file (Defaults to "clogin.conf")
+- `-l, --log-file <val>` - Set log file (Defaults to `/dev/stderr`)
+
 - `-u, --username <val>` - Set login username
 - `-p, --password <val>` - Set login password
+- `--allow-empty` - Allow using empty username and password
+
 - `-c, --client <val>` - Set http client to make requests. (Possible <val>ues: auto|curl|wget)
-- `--test-url <val>` - Set connectivity test url (Default to "http://icanhazip.com")
 - `--base <val>` - Set http client base url (Defauts to "https://login.aut.ac.ir")
 - `--login-endpoint <val>` - Set login endpoint (Defaults to "/login")
 - `--logout-endpoint <val>` - Set logout endpoint (Defaults to "/logout")
-- `--allow-empty` - Allow using empty username and password
+
+- `--test-url <val>` - Set connectivity test url (Default to "http://icanhazip.com")
+
+- `--loop-interval <val>` - Set loop interval in seconds (Defaults to 1800 = 30 minutes)
+
 - `-h, --help` - Display help message
 - `-v, --version` - Display version
 -  `-x, --debug` - Debug mode. Shows all internal invoked commands
@@ -65,16 +72,22 @@ It is possible to use environment variables instead of arguments to configure cl
 Supported environment variables:
 
 - `CONFIG_FILE`
+- `LOG_FILE`
+
 - `USERNAME`
 - `PASSWORD`
+- `ALLOW_EMPTY`
+
 - `HTTP_CLIENT`
-- `TEST_URL`
 - `BASE_URL`
 - `LOGIN_ENDPOINT`
 - `LOGOUT_ENDPOINT`
-- `ALLOW_EMPTY`
 - `SUCCESS_CODE`
+
+- `TEST_URL`
 - `TEST_SUCCESS_CODE`
+
+- `LOOP_INTERVAL`
 
 ## DOCKER IMAGE
 

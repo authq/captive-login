@@ -14,15 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Exit on any error
+# Strictly exit on any error
 set -e
 
+# Login command
 login () {
     # Ensure username and password are set
-    if [ $ALLOW_EMPTY -eq 0 ] ; then
-        [ -z "$USERNAME" ] && prompt "USERNAME" "Enter username"
-        [ -z "$PASSWORD" ] && prompt "PASSWORD" "Enter password"
-    fi
+    ensure_user_pass
 
     local code=`_request "${BASE_URL}${LOGIN_ENDPOINT}" "username=${USERNAME}&password=${PASSWORD}"`
     
@@ -35,6 +33,7 @@ login () {
     fi
 }
 
+# Logout command
 logout () {
     local code=`_request "${BASE_URL}${LOGOUT_ENDPOINT}"`
     
@@ -45,6 +44,31 @@ logout () {
     fi
 }
 
+# Loop command
+loop () {
+    # Ensure username and password are set
+    ensure_user_pass
+
+    while true ; do
+        # Test connectivity
+        if $0 test > /dev/null ; then
+            log "Connected"
+        else 
+            # Try to login
+            log "Tring to login..."
+            if $0 login > /dev/null ; then
+                log "Login successful"
+            else
+                log "Login failed"
+            fi
+        fi
+
+        log "Sleeping for $LOOP_INTERVAL seconds"
+        sleep "$LOOP_INTERVAL"
+    done;
+}
+
+# Test command
 test () {
     local code=`_request "${TEST_URL}"`
     
@@ -123,45 +147,68 @@ usage () {
     version
     echo
     cat <<EOF
-    Usage: clogin [login|logout|test] [--help] [OPTION...] 
+    Usage: clogin login|logout|loop|test [--help] [OPTION...] 
 
     Captive-portal login utility for headless environments written in pure bash
 
     Options:
         -f, --conf              Path to config file (Defaults to "clogin.conf")
+        -l, --log-file <val>     Set log file (Defaults to `/dev/stderr`)
+
         -u, --username <val>    Set login username
         -p, --password <val>    Set login password
+        --allow-empty           Allow using empty username and password
+
         -c, --client <val>      Set http client to make requests. (Possible values: auto|curl|wget)
-        --test-url <val>        Set connectivity test url (Default to "http://icanhazip.com")
         --base <val>            Set http client base url (Defauts to "https://login.aut.ac.ir")
         --login-endpoint <val>  Set login endpoint (Defaults to "/login")
         --logout-endpoint <val> Set logout endpoint (Defaults to "/logout")
-        --allow-empty           Allow using empty username and password
 
+        --test-url <val>        Set connectivity test url (Default to "http://icanhazip.com")
+
+        --loop-interval <val>   Set loop interval in seconds (Defaults to 1800 = 30 minutes)
+        
         -h, --help              Display this help message
         -v, --version           Display version
         -x, --debug             Debug mode. Shows all internal invoked commands
 
     Supported environment variables:
         - CONFIG_FILE
+        - LOG_FILE
+
         - USERNAME
         - PASSWORD
+        - ALLOW_EMPTY
+
         - HTTP_CLIENT
-        - TEST_URL
         - BASE_URL
         - LOGIN_ENDPOINT
         - LOGOUT_ENDPOINT
-        - ALLOW_EMPTY
         - SUCCESS_CODE
+
+        - TEST_URL
         - TEST_SUCCESS_CODE
 
+        - LOOP_INTERVAL
 EOF
 }
 
 die () {
-    usage
     echo "[Error] $1"
     exit 1
+}
+
+log() {
+    local msg=$1
+    
+    local timestamp=`date "+%Y-%m-%d %H:%M:%S"`
+    local log="[$timestamp] $msg"
+
+    if [ ! -z $LOG_FILE ] ; then
+        echo $log >> $LOG_FILE
+    else
+        echo $log
+    fi
 }
 
 prompt() {
@@ -170,6 +217,17 @@ prompt() {
     while [ -z "${!var}" ]; do
         read -p " » $msg: " $var
     done
+}
+
+ensure_user_pass () {
+    if [ $ALLOW_EMPTY -eq 0 ] ; then
+        if [ -z "$USERNAME" ]; then
+            prompt "USERNAME" "Enter username"
+        fi
+        if [ -z "$PASSWORD" ]; then
+            prompt "PASSWORD" "Enter password"
+        fi
+    fi
 }
 
 ok() {
@@ -186,7 +244,6 @@ err() {
 
 readconf () {
     local file=$1
-
     for line in `cat $file | grep "^[A-Z]"`; do
         key=`echo $line|cut -d '=' -f1`
         val=`echo $line|cut -d '=' -f2`
@@ -201,23 +258,29 @@ readconf () {
 #------------------------------------------------------
 
 # Default options
+export CONFIG_FILE=${CONFIG_FILE:-"clogin.conf"}
+export LOG_FILE=${LOG_FILE:-"/dev/stderr"}
+
 export HTTP_CLIENT=${HTTP_CLIENT:-"auto"}
 export BASE_URL=${BASE_URL:-"https://login.aut.ac.ir"}
 export LOGIN_ENDPOINT=${LOGIN_ENDPOINT:-"/login"}
 export LOGOUT_ENDPOINT=${LOGOUT_ENDPOINT:-"/logout"}
+export SUCCESS_CODE=${SUCCESS_CODE:-302}
+
 export USERNAME=${USERNAME:-""}
 export PASSWORD=${PASSWORD:-""}
 export ALLOW_EMPTY=${ALLOW_EMPTY:-0}
-export SUCCESS_CODE=${SUCCESS_CODE:-302}
+
 export TEST_URL=${TEST_URL:-"http://icanhazip.com"}
 export TEST_SUCCESS_CODE=${TEST_SUCCESS_CODE:-200}
-export CONFIG_FILE=${CONFIG_FILE:-"clogin.conf"}
+
+export LOOP_INTERVAL=${LOOP_INTERVAL:-1800}
 
 # Get and validate command
 COMMAND=$1
 
 case $COMMAND in
-    login|logout|test) shift ;;
+    login|logout|loop|test) shift ;;
     printenv) shift ;;
     -v|--version|-h|--help) ;;
     *) die "Unknown command: $COMMAND"; exit 1 ;;
@@ -233,21 +296,27 @@ done
 while [ $# -gt 0 ]; do
     case "$1" in
         -f|--conf)              shift; CONFIG_FILE=$1; shift ;;
+        -l|--log-file)           shift; LOG_FILE=$1; shift ;;
+
         -u|--username)          shift; USERNAME=$1; shift ;;
         -p|--password)          shift; PASSWORD=$1; shift ;;
+        --allow-empty)          shift; ALLOW_EMPTY=1 ;;
+
         -c|--client)            shift; HTTP_CLIENT=$1; shift ;;
-        --test-url)             shift; TEST_URL=$1; shift ;;
-        --test-success-code)    shift; TEST_SUCCESS_CODE=$1; shift ;;
         --base)                 shift; BASE_URL=$1; shift ;;
         --login-endpoint)       shift; LOGIN_ENDPOINT=$1; shift ;;
         --logout-endpoint)      shift; LOGOUT_ENDPOINT=$1; shift ;;
         --success-code)         shift; SUCCESS_CODE=$1; shift ;;
-        --allow-empty)          shift; ALLOW_EMPTY=1 ;;
-        
+
+        --test-url)             shift; TEST_URL=$1; shift ;;
+        --test-success-code)    shift; TEST_SUCCESS_CODE=$1; shift ;;
+
+        --loop-interval)        shift; LOOP_INTERVAL=$1; shift ;;
 
         -h|--help)              usage; exit 0 ;;
         -v|--version)           version; exit 0 ;;
         -x| --debug)            shift; set -x ;;
+
         -*)                     die "Unrecognized option: $1" ;;
         *)                      die "Invalid option: $1" ;;
     esac
