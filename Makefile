@@ -14,3 +14,5 @@ docker-build: Dockerfile
 
 docker: docker-build
 	docker run -it --rm authq/clogin test
+
+.PHONY: test install docker-build docker
