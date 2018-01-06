@@ -10,6 +10,9 @@ Login:
 Test connectivity:
 `clogin test`
 
+Continuesly check login state:
+`clogin loop -u test -p test`
+
 Logout:
 `clogin logout`
 
@@ -36,20 +39,15 @@ For detailed info of how this script works, see [bin/clogin](bin/clogin).
 
 - `-f, --conf` - Path to config file (Defaults to "clogin.conf")
 - `-l, --log-file <val>` - Set log file (Defaults to `/dev/stderr`)
-
 - `-u, --username <val>` - Set login username
 - `-p, --password <val>` - Set login password
 - `--allow-empty` - Allow using empty username and password
-
 - `-c, --client <val>` - Set http client to make requests. (Possible <val>ues: auto|curl|wget)
 - `--base <val>` - Set http client base url (Defauts to "https://login.aut.ac.ir")
 - `--login-endpoint <val>` - Set login endpoint (Defaults to "/login")
 - `--logout-endpoint <val>` - Set logout endpoint (Defaults to "/logout")
-
 - `--test-url <val>` - Set connectivity test url (Default to "http://icanhazip.com")
-
 - `--loop-interval <val>` - Set loop interval in seconds (Defaults to 1800 = 30 minutes)
-
 - `-h, --help` - Display help message
 - `-v, --version` - Display version
 -  `-x, --debug` - Debug mode. Shows all internal invoked commands
@@ -73,20 +71,16 @@ Supported environment variables:
 
 - `CONFIG_FILE`
 - `LOG_FILE`
-
 - `USERNAME`
 - `PASSWORD`
 - `ALLOW_EMPTY`
-
 - `HTTP_CLIENT`
 - `BASE_URL`
 - `LOGIN_ENDPOINT`
 - `LOGOUT_ENDPOINT`
 - `SUCCESS_CODE`
-
 - `TEST_URL`
 - `TEST_SUCCESS_CODE`
-
 - `LOOP_INTERVAL`
 
 ## DOCKER IMAGE
@@ -97,7 +91,7 @@ An alpine based docker image (~9MB) is available for ease of use and deployment.
 docker run -it --rm \
     -e USERNAME="test" \
     -e PASSWORD="test" \
-    pooya/clogin login
+    pooya/clogin loop
 ```
 
 ## DEVELOPMENT
@@ -108,7 +102,7 @@ Available Makefile commands:
 
 - `make test` - Run BATS tests
 - `make install` - Installs `clogin` utility to `/usr/local/bin`
-- `make docker-build` - Make docker image
+- `make docker` - Make docker image
 - `make docker-test` - Test docker image functionality
 
 Feel free forking this repository and making PRs for features and fixes :)
