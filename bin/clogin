@@ -145,6 +145,7 @@ version () {
 
 usage () {
     version
+
     echo
     cat <<EOF
     Usage: clogin login|logout|loop|test [--help] [OPTION...] 
@@ -194,11 +195,13 @@ EOF
 }
 
 die () {
-    echo "[Error] $1"
+    local msg=$1
+
+    echo "[Error] $msg"
     exit 1
 }
 
-log() {
+log () {
     local msg=$1
     
     local timestamp=`date "+%Y-%m-%d %H:%M:%S"`
@@ -211,9 +214,10 @@ log() {
     fi
 }
 
-prompt() {
+prompt () {
     local var=$1
     local msg=$2
+
     while [ -z "${!var}" ]; do
         read -p " » $msg: " $var
     done
@@ -230,20 +234,23 @@ ensure_user_pass () {
     fi
 }
 
-ok() {
+ok () {
     local msg=$1
+
     echo " ✓ $msg"
     exit 0
 }
 
-err() {
+err () {
     local msg=$1
+
     echo " x $msg"
     exit 1
 }
 
 readconf () {
     local file=$1
+
     for line in `cat $file | grep "^[A-Z]"`; do
         key=`echo $line|cut -d '=' -f1`
         val=`echo $line|cut -d '=' -f2`
@@ -331,7 +338,7 @@ if [ -r $CONFIG_FILE ]; then
 fi
 
 # Chooce the best HTTP_CLIENT if set to auto
-if [ ! -x "$(command -v ${HTTP_CLIENT})" ] && [ "${HTTP_CLIENT}" = "auto" ] ; then
+if [ "${HTTP_CLIENT}" = "auto" ] ; then
     if [ -x "$(command -v curl)" ]; then
         HTTP_CLIENT="curl"
     elif [ -x "$(command -v wget)" ]; then
