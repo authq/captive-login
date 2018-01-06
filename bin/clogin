@@ -283,6 +283,7 @@ case $COMMAND in
     login|logout|loop|test) shift ;;
     printenv) shift ;;
     -v|--version|-h|--help) ;;
+    '') usage; exit 1 ;;
     *) die "Unknown command: $COMMAND"; exit 1 ;;
 esac
 

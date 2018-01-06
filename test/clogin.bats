@@ -1,9 +1,14 @@
 load _common
 
+@test "Show usage when no commands provided" {
+  run clogin
+  assert_error
+  assert_usage
+}
+
 @test "Unknown command" {
   run clogin foobar
   assert_error
-  assert_usage
   assert_output "foobar"
 }
 
