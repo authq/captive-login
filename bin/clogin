@@ -125,21 +125,21 @@ usage () {
     cat <<EOF
     Usage: clogin [login|logout|test] [--help] [OPTION...] 
 
-    Captive portal login utility for headless environments written in pure bash
+    Captive-portal login utility for headless environments written in pure bash
 
     Options:
-        -u, --username VAL    Set login username
-        -p, --password VAL    Set login password
-        -c, --client VAL      Set http client to make requests. (Possible values: auto|curl|wget)
-        --test-url VAL        Set auth test url (Default to "http://icanhazip.com")
-        --base VAL            Set http client base url (Defauts to "https://login.aut.ac.ir")
-        --login-endpoint VAL  Set login endpoint (Defaults to "/login")
-        --logout-endpoint VAL Set logout endpoint (Defaults to "/logout")
-        --allow-empty         Allow using empty username and password
+        -u, --username <val>    Set login username
+        -p, --password <val>    Set login password
+        -c, --client <val>      Set http client to make requests. (Possible values: auto|curl|wget)
+        --test-url <val>        Set auth test url (Default to "http://icanhazip.com")
+        --base <val>            Set http client base url (Defauts to "https://login.aut.ac.ir")
+        --login-endpoint <val>  Set login endpoint (Defaults to "/login")
+        --logout-endpoint <val> Set logout endpoint (Defaults to "/logout")
+        --allow-empty           Allow using empty username and password
 
-        -h, --help            Display this help message
-        -v, --version         Display version
-        -x, --debug               Debug mode. Shows all internal invoked commands
+        -h, --help              Display this help message
+        -v, --version           Display version
+        -x, --debug             Debug mode. Shows all internal invoked commands
 
     Supported environment variables:
         - USERNAME
