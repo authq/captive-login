@@ -18,7 +18,7 @@
 set -e
 
 # Default options
-export HTTP_CLIENT=${HTTP_CLIENT:-"curl"}
+export HTTP_CLIENT=${HTTP_CLIENT:-"auto"}
 export BASE_URL=${BASE_URL:-"https://login.aut.ac.ir"}
 export LOGIN_ENDPOINT=${LOGIN_ENDPOINT:-"/login"}
 export LOGOUT_ENDPOINT=${LOGOUT_ENDPOINT:-"/logout"}
@@ -56,7 +56,7 @@ login () {
 logout () {
     local code=`_request "${BASE_URL}${LOGOUT_ENDPOINT}"`
     
-    if [ $code -eq "${SUCCESS_CODE}" ]; then
+    if [ "$code" -eq "${SUCCESS_CODE}" ]; then
         ok "Logout was successful"
     else
         err "Error while logging out"
@@ -69,7 +69,7 @@ logout () {
 logout () {
     local code=`_request "${BASE_URL}${LOGOUT_ENDPOINT}"`
     
-    if [ $code -eq "302" ]; then
+    if [ "$code" -eq "302" ]; then
         ok "Logout was successful"
     else
         err "Error while logging out"
@@ -82,7 +82,7 @@ logout () {
 check () {
     local code=`_request "${CHECK_URL}"`
     
-    if [ $code -eq "${CHECK_SUCCESS_CODE}" ]; then
+    if [ "$code" -eq "${CHECK_SUCCESS_CODE}" ]; then
         ok "Check was successful"
     else
         err "Login required"
@@ -92,14 +92,14 @@ check () {
 #------------------------------------------------------
 # _request function
 # Usage: _request path [post_data]
-# Returns: http status code
+# Returns: http status code or -1 if any error occurs
 #------------------------------------------------------
 _request () {
     local url=$1
     local data=$2
 
     local args=''
-    local code=0
+    local code
 
     case "${HTTP_CLIENT}" in
         curl)
@@ -121,8 +121,6 @@ _request () {
             code=`curl $args`
         ;;
         wget)
-            cmd="wget"
-
             # Make it silent
             args+=' -q -O /dev/null'
 
@@ -145,7 +143,7 @@ _request () {
         ;;
     esac
 
-    echo ${code}
+    echo ${code:-"-1"}
 }
 
 #------------------------------------------------------
@@ -173,8 +171,9 @@ usage () {
         --logout-endpoint VAL Set logout endpoint (Defaults to "/logout")
         --allow-empty         Allow using empty username and password
 
-        -h, --help        Display this help message
-        -v, --version     Display version
+        -h, --help            Display this help message
+        -v, --version         Display version
+        -x, --debug               Debug mode. Shows all internal invoked commands
 
     Supported environment variables:
         - USERNAME
@@ -244,13 +243,26 @@ while [ $# -gt 0 ]; do
         --logout-endpoint)      shift; LOGOUT_ENDPOINT=$1; shift ;;
         --success-code)         shift; SUCCESS_CODE=$1; shift ;;
         --allow-empty)          shift; ALLOW_EMPTY=1 ;;
+        
 
         -h|--help)              usage; exit 0 ;;
         -v|--version)           version; exit 0 ;;
+        -x| --debug)            shift; set -x ;;
         -*)                     die "Unrecognized option: $1" ;;
         *)                      die "Invalid option: $1" ;;
     esac
 done
 
-# 3. Invoke command
+# 3. Chooce the best HTTP_CLIENT if set to auto
+if [ ! -x "$(command -v ${HTTP_CLIENT})" ] && [ "${HTTP_CLIENT}" = "auto" ] ; then
+    if [ -x "$(command -v curl)" ]; then
+        HTTP_CLIENT="curl"
+    elif [ -x "$(command -v wget)" ]; then
+        HTTP_CLIENT="wget"
+    else
+        die "No HTTP client is available! Either curl or wget is required."
+    fi
+fi
+
+# 4. Invoke command
 $COMMAND
