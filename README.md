@@ -1,5 +1,5 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/authq/captive-login.svg?style=flat-square)](https://circleci.com/gh/authq/captive-login)
-[![Docker Automated build](https://img.shields.io/docker/automated/authq/clogin.svg?style=flat-square)](https://github.com/authq/clogin)
+[![Docker Automated build](https://img.shields.io/docker/automated/authq/clogin.svg?style=flat-square)](https://hub.docker.com/r/authq/clogin)
 [![Docker Build Status](https://img.shields.io/docker/build/authq/clogin.svg?style=flat-square)](https://hub.docker.com/r/authq/clogin)
 [![Docker layers](https://images.microbadger.com/badges/image/authq/clogin.svg)](https://microbadger.com/images/authq/clogin)
 
@@ -94,7 +94,7 @@ Supported environment variables:
 
 ## DOCKER IMAGE
 
-An alpine based docker image (~4MB) is available for ease of use and deployment.
+An alpine based [docker image](https://hub.docker.com/r/authq/clogin) (~4MB) is available for ease of use and deployment.
 
 ```bash
 docker pull authq/captive-login
