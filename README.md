@@ -41,17 +41,17 @@ For detailed info of how this script works, see [bin/clogin](bin/clogin).
 
 **Supported options:**
 
-- `-f, --conf` - Path to config file (Defaults to "clogin.conf")
+- `-f, --conf` - Path to config file (Defaults to `clogin.conf`)
 - `-l, --log-file <val>` - Set log file (Defaults to `/dev/stderr`)
 - `-u, --username <val>` - Set login username
 - `-p, --password <val>` - Set login password
 - `--allow-empty` - Allow using empty username and password
-- `-c, --client <val>` - Set http client to make requests. (Possible <val>ues: auto|curl|wget)
-- `--base <val>` - Set http client base url (Defauts to "https://login.aut.ac.ir")
-- `--login-endpoint <val>` - Set login endpoint (Defaults to "/login")
-- `--logout-endpoint <val>` - Set logout endpoint (Defaults to "/logout")
-- `--test-url <val>` - Set connectivity test url (Default to "http://icanhazip.com")
-- `--loop-interval <val>` - Set loop interval in seconds (Defaults to 1800 = 30 minutes)
+- `-c, --client <val>` - Set http client to make requests. (Possible values: `auto|curl|wget`)
+- `--base <val>` - Set http client base url (Defauts to `https://login.aut.ac.ir`)
+- `--login-endpoint <val>` - Set login endpoint (Defaults to `/login`)
+- `--logout-endpoint <val>` - Set logout endpoint (Defaults to `/logout`)
+- `--test-url <val>` - Set connectivity test url (Default to `http://icanhazip.com`)
+- `--loop-interval <val>` - Set loop interval in seconds (Defaults to `1800` = `30 minutes`)
 - `-h, --help` - Display help message
 - `-v, --version` - Display version
 -  `-x, --debug` - Debug mode. Shows all internal invoked commands
