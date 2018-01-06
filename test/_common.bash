@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Extend path
-export PATH=$PATH:./bin
+export PATH=./bin:$PATH
 
 #------------------------------------------------------
 # Assertions
