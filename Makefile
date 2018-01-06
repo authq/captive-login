@@ -4,7 +4,7 @@ BIN=bin/clogin
 test: $(BIN) $(TESTS) 
 	./test/bats/bats test
 
-docker-build: Dockerfile
+docker: Dockerfile
 	docker build -t pooya/clogin .
 
 docker-test: docker-build
