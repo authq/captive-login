@@ -1,6 +1,11 @@
 TESTS=test/clogin.bats
 BIN=bin/clogin
 
+install: test $(BIN)
+	sudo cp -v bin/clogin /usr/local/bin
+	sudo cp -v etc/clogin.conf /usr/local/etc
+	hash -r
+
 test: $(BIN) $(TESTS) 
 	./test/bats/bats test
 
