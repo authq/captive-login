@@ -38,7 +38,7 @@ For detailed info of how this script works, see [bin/clogin](bin/clogin).
 - `-u, --username <val>` - Set login username
 - `-p, --password <val>` - Set login password
 - `-c, --client <val>` - Set http client to make requests. (Possible <val>ues: auto|curl|wget)
-- `--test-url <val>` - Set auth test url (Default to "http://icanhazip.com")
+- `--test-url <val>` - Set connectivity test url (Default to "http://icanhazip.com")
 - `--base <val>` - Set http client base url (Defauts to "https://login.aut.ac.ir")
 - `--login-endpoint <val>` - Set login endpoint (Defaults to "/login")
 - `--logout-endpoint <val>` - Set logout endpoint (Defaults to "/logout")
