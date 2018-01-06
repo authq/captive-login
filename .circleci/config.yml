@@ -1,15 +1,25 @@
 version: 2
 
 jobs:
-  ubuntu:
+  ubuntu-curl:
     docker:
       - image: ubuntu
     steps:
       - checkout
+      - run: apt update && apt install -fy make curl
+      - run: make test
+
+  ubuntu-wget:
+    docker:
+      - image: ubuntu
+    steps:
+      - checkout
+      - run: apt update && apt install -fy make wget
       - run: make test
 
 workflows:
   version: 2
   test:
     jobs:
-      - ubuntu
+      - ubuntu-curl
+      - ubuntu-wget
