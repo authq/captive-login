@@ -4,7 +4,7 @@ test: $(TESTS)
 	./test/bats/bats test
 
 docker-build: Dockerfile
-	docker build -t pooya/hlogin .
+	docker build -t pooya/clogin .
 
-docker-check: docker-build
-	docker run -it --rm pooya/hlogin check -x
+docker-test: docker-build
+	docker run -it --rm pooya/clogin test -x

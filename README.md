@@ -1,6 +1,6 @@
-# Headless Login
+# Captive Login
 
-> Automated HTTP login utility for headless environments written in pure Bash.
+> Captive portal login utility for headless environments written in pure bash
 
 ### History
 
@@ -11,9 +11,9 @@ At [Amirkabir](https://www.aut.ac.ir/aut/) university, we have a captive portal 
 **Download script:**
 
 ```bash
-wget https://raw.githubusercontent.com/pi0/headless-login/master/bin/hlogin
-chmod +x hlogin
-sudo mv hlogin /usr/local/bin
+wget https://raw.githubusercontent.com/pi0/headless-login/master/bin/clogin
+chmod +x clogin
+sudo mv clogin /usr/local/bin
 ```
 
 **Login:**
@@ -21,19 +21,19 @@ sudo mv hlogin /usr/local/bin
 We can also ommit username or password params and enter them interactively.
 
 ```bash
-hlogin login -u test -p test
+clogin login -u test -p test
 ```
 
 **Test internet connectivity:**
 
 ```bash
-hlogin check
+clogin test
 ```
 
 **Logout:**
 
 ```bash
-hlogin logout
+clogin logout
 ```
 
 ## Docker image
@@ -44,13 +44,13 @@ An alpine based docker image is also available for ease of use and deployment.
 docker run -it --rm \
         -e USERNAME="test" \
         -e PASSWORD="test" \
-        pooya/hlogin login
+        pooya/clogin login
 ```
 
 ## Usage
 
 ```bash
-hlogin [login|logout|check] [--help] [OPTION...] 
+clogin [login|logout|test] [--help] [OPTION...] 
 ```
 
 Options:
@@ -71,7 +71,7 @@ Option                   | Description
 
 ### Environment variables
 
-It is possible to use Environment variables instead of arguments to configure hlogin.
+It is possible to use Environment variables instead of arguments to configure clogin.
 Currently supported environment variables:
 
 - `USERNAME`
@@ -83,14 +83,14 @@ Currently supported environment variables:
 - `LOGOUT_ENDPOINT`
 - `ALLOW_EMPTY`
 - `SUCCESS_CODE`
-- `CHECK_SUCCESS_CODE`
+- `TEST_SUCCESS_CODE`
 
 ## Behind the scenes
 
 Login process is done by sending a HTTP(S) `POST` request to `/login` endpoint of captive portal containing `username` and `password` fields. Logout is also done by sending a `GET` request to `/logout` endpoint.
 Both success if HTTP response code is `302` (Mikrotik spec) is returned.
-The connectivity check also successes when `GET` requst to test url is `200`.
-For detailed info of how this script works, see sourcecode [bin/hlogin](bin/hlogin). 
+The connectivity test also successes when `GET` requst to test url is `200`.
+For detailed info of how this script works, see sourcecode [bin/clogin](bin/clogin). 
 
 ## Development
 
@@ -99,9 +99,9 @@ This project uses [BATS](https://github.com/sstephenson/bats) for automated test
 Available Makefile commands:
 
 - **make test** - Run BATS tests
-- **make install** - Installs `hlogin` utility to `/usr/local/bin`
+- **make install** - Installs `clogin` utility to `/usr/local/bin`
 - **make docker-build** - Make docker image
-- **make docker-check** - Test docker image functionality (Also runs `docker-build`)
+- **make docker-test** - Test docker image functionality (Also runs `docker-build`)
 
 Feel free forking this repository and making PRs for features and fixes :)
 

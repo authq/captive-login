@@ -6,8 +6,8 @@ FROM alpine
 RUN apk --update add curl bash && \
     rm -rf /var/cache/apk/*
 
-# Set entrypoint to hlogin
-ENTRYPOINT [ "hlogin" ]
+# Set entrypoint to clogin
+ENTRYPOINT [ "clogin" ]
 
 # Add binaries
 ADD bin /bin

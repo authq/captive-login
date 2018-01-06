@@ -17,21 +17,6 @@
 # Exit on any error
 set -e
 
-# Default options
-export HTTP_CLIENT=${HTTP_CLIENT:-"auto"}
-export BASE_URL=${BASE_URL:-"https://login.aut.ac.ir"}
-export LOGIN_ENDPOINT=${LOGIN_ENDPOINT:-"/login"}
-export LOGOUT_ENDPOINT=${LOGOUT_ENDPOINT:-"/logout"}
-export USERNAME=${USERNAME:-""}
-export PASSWORD=${PASSWORD:-""}
-export ALLOW_EMPTY=${ALLOW_EMPTY:-0}
-export SUCCESS_CODE=${SUCCESS_CODE:-302}
-export CHECK_URL=${CHECK_URL:-"http://icanhazip.com"}
-export CHECK_SUCCESS_CODE=${CHECK_SUCCESS_CODE:-200}
-
-#------------------------------------------------------
-# login function
-#------------------------------------------------------
 login () {
     # Ensure username and password are set
     if [ $ALLOW_EMPTY -eq 0 ] ; then
@@ -50,9 +35,6 @@ login () {
     fi
 }
 
-#------------------------------------------------------
-# logout function
-#------------------------------------------------------
 logout () {
     local code=`_request "${BASE_URL}${LOGOUT_ENDPOINT}"`
     
@@ -63,27 +45,11 @@ logout () {
     fi
 }
 
-#------------------------------------------------------
-# logout function
-#------------------------------------------------------
-logout () {
-    local code=`_request "${BASE_URL}${LOGOUT_ENDPOINT}"`
+test () {
+    local code=`_request "${TEST_URL}"`
     
-    if [ "$code" -eq "302" ]; then
-        ok "Logout was successful"
-    else
-        err "Error while logging out"
-    fi
-}
-
-#------------------------------------------------------
-# check function
-#------------------------------------------------------
-check () {
-    local code=`_request "${CHECK_URL}"`
-    
-    if [ "$code" -eq "${CHECK_SUCCESS_CODE}" ]; then
-        ok "Check was successful"
+    if [ "$code" -eq "${TEST_SUCCESS_CODE}" ]; then
+        ok "test was successful"
     else
         err "Login required"
     fi
@@ -150,16 +116,16 @@ _request () {
 # Utils
 #------------------------------------------------------
 version () {
-    echo "Headless Login 1.0.0"
+    echo "Captive Login 1.0.0"
 }
 
 usage () {
     version
     echo
     cat <<EOF
-    Usage: hlogin [login|logout|check] [--help] [OPTION...] 
+    Usage: clogin [login|logout|test] [--help] [OPTION...] 
 
-    Automated HTTP login utility for headless environments
+    Captive portal login utility for headless environments written in pure bash
 
     Options:
         -u, --username VAL    Set login username
@@ -185,7 +151,7 @@ usage () {
         - LOGOUT_ENDPOINT
         - ALLOW_EMPTY
         - SUCCESS_CODE
-        - CHECK_SUCCESS_CODE
+        - TEST_SUCCESS_CODE
 
 EOF
 }
@@ -220,24 +186,36 @@ err() {
 # Entrypoint
 #------------------------------------------------------
 
-# 1. Get and validate command
+# Default options
+export HTTP_CLIENT=${HTTP_CLIENT:-"auto"}
+export BASE_URL=${BASE_URL:-"https://login.aut.ac.ir"}
+export LOGIN_ENDPOINT=${LOGIN_ENDPOINT:-"/login"}
+export LOGOUT_ENDPOINT=${LOGOUT_ENDPOINT:-"/logout"}
+export USERNAME=${USERNAME:-""}
+export PASSWORD=${PASSWORD:-""}
+export ALLOW_EMPTY=${ALLOW_EMPTY:-0}
+export SUCCESS_CODE=${SUCCESS_CODE:-302}
+export TEST_URL=${TEST_URL:-"http://icanhazip.com"}
+export TEST_SUCCESS_CODE=${TEST_SUCCESS_CODE:-200}
+
+# Get and validate command
 COMMAND=$1
 
 case $COMMAND in
-    login|logout|check) shift ;;
+    login|logout|test) shift ;;
     printenv) shift ;;
     -v|--version|-h|--help) ;;
     *) die "Unknown command: $COMMAND"; exit 1 ;;
 esac
 
-# 2. Parse options
+# Parse options
 while [ $# -gt 0 ]; do
     case "$1" in
         -u|--username)          shift; USERNAME=$1; shift ;;
         -p|--password)          shift; PASSWORD=$1; shift ;;
         -c|--client)            shift; HTTP_CLIENT=$1; shift ;;
-        --check-url)            shift; CHECK_URL=$1; shift ;;
-        --check-success-code)   shift; CHECK_SUCCESS_CODE=$1; shift ;;
+        --test-url)            shift; TEST_URL=$1; shift ;;
+        --test-success-code)   shift; TEST_SUCCESS_CODE=$1; shift ;;
         --base)                 shift; BASE_URL=$1; shift ;;
         --login-endpoint)       shift; LOGIN_ENDPOINT=$1; shift ;;
         --logout-endpoint)      shift; LOGOUT_ENDPOINT=$1; shift ;;
@@ -264,5 +242,5 @@ if [ ! -x "$(command -v ${HTTP_CLIENT})" ] && [ "${HTTP_CLIENT}" = "auto" ] ; th
     fi
 fi
 
-# 4. Invoke command
+# Invoke command
 $COMMAND
