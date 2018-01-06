@@ -1,7 +1,7 @@
-[![CircleCI](https://circleci.com/gh/authq/captive-login.svg?style=svg)](https://circleci.com/gh/authq/captive-login)
+[![CircleCI](https://img.shields.io/circleci/project/github/authq/captive-login.svg?style=flat-square)](https://circleci.com/gh/authq/captive-login)
 [![Docker Automated build](https://img.shields.io/docker/automated/authq/captive-login.svg?style=flat-square)](https://github.com/authq/captive-login)
 [![Docker Build Status](https://img.shields.io/docker/build/authq/captive-login.svg?style=flat-square)](https://hub.docker.com/r/authq/captive-login)
-[![](https://images.microbadger.com/badges/image/authq/captive-login.svg?style=flat-square)](https://microbadger.com/images/authq/captive-login "Get your own image badge on microbadger.com")
+[![Docker layers](https://images.microbadger.com/badges/image/authq/captive-login.svg)](https://microbadger.com/images/authq/captive-login)
 
 # clogin(1) -- captive-portal login utility
 
