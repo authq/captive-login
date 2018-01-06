@@ -15,5 +15,4 @@ docker-build: Dockerfile
 docker: docker-build
 	docker run -it --rm authq/captive-login test
 
-.PHONY:
-	test install docker-build docker
+.PHONY: test install docker-build docker
