@@ -1,0 +1,15 @@
+version: 2
+
+jobs:
+  ubuntu:
+    docker:
+      - image: ubuntu
+    steps:
+      - checkout
+      - run: make test
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - ubuntu
