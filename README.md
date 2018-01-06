@@ -1,7 +1,7 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/authq/captive-login.svg?style=flat-square)](https://circleci.com/gh/authq/captive-login)
-[![Docker Automated build](https://img.shields.io/docker/automated/authq/captive-login.svg?style=flat-square)](https://github.com/authq/captive-login)
-[![Docker Build Status](https://img.shields.io/docker/build/authq/captive-login.svg?style=flat-square)](https://hub.docker.com/r/authq/captive-login)
-[![Docker layers](https://images.microbadger.com/badges/image/authq/captive-login.svg)](https://microbadger.com/images/authq/captive-login)
+[![Docker Automated build](https://img.shields.io/docker/automated/authq/clogin.svg?style=flat-square)](https://github.com/authq/clogin)
+[![Docker Build Status](https://img.shields.io/docker/build/authq/clogin.svg?style=flat-square)](https://hub.docker.com/r/authq/clogin)
+[![Docker layers](https://images.microbadger.com/badges/image/authq/clogin.svg)](https://microbadger.com/images/authq/clogin)
 
 # clogin(1) -- captive-portal login utility
 
@@ -101,7 +101,7 @@ docker pull authq/captive-login
 ```
 
 ```bash
-docker run -it --rm  -e USERNAME="test" -e PASSWORD="test" authq/captive-login loop
+docker run -it --rm  -e USERNAME="test" -e PASSWORD="test" authq/clogin loop
 ```
 
 ## DEVELOPMENT
@@ -113,7 +113,7 @@ Available Makefile commands:
 - `make test` - Run BATS tests
 - `make install` - Installs `clogin` utility to `/usr/local/bin`
 - `make docker-build` - Build docker image
-- `make docker` - Buikld and test docker image functionality
+- `make docker` - Build and test docker image functionality
 
 Feel free forking this repository and making PRs for features and fixes :)
 

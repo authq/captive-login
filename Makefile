@@ -10,9 +10,9 @@ install: test $(BIN)
 	hash -r
 
 docker-build: Dockerfile
-	docker build -t authq/captive-login .
+	docker build -t authq/clogin .
 
 docker: docker-build
-	docker run -it --rm authq/captive-login test
+	docker run -it --rm authq/clogin test
 
 .PHONY: test install docker-build docker
