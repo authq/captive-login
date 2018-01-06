@@ -34,6 +34,7 @@ For detailed info of how this script works, see [bin/clogin](bin/clogin).
 
 **Supported options:**
 
+- `-f, --conf` - Path to config file (Defaults to "clogin.conf")
 - `-u, --username <val>` - Set login username
 - `-p, --password <val>` - Set login password
 - `-c, --client <val>` - Set http client to make requests. (Possible <val>ues: auto|curl|wget)
@@ -46,17 +47,16 @@ For detailed info of how this script works, see [bin/clogin](bin/clogin).
 - `-v, --version` - Display version
 -  `-x, --debug` - Debug mode. Shows all internal invoked commands
 
+### CONFIG FILE
 
-## DOCKER
-
-An alpine based docker image (~9MB) is available for ease of use and deployment.
+Config files at the paths of `/usr/local/etc/clogin.conf`, `/etc/clogin.conf` and `~/.clogin.conf` will be applied if readable in order **before** parsing options. For a complete example see [etc/clogin.conf](etc/clogin.conf).
 
 ```bash
-docker run -it --rm \
-    -e USERNAME="test" \
-    -e PASSWORD="test" \
-    pooya/clogin login
+USERNAME=foo
+PASSWORD=bar
 ```
+
+When `CONFIG_FILE` environment variable or `-f, --conf` options provided it will be applied **after** parsing options.
 
 ### ENVIRONMENT VARIABLES
 
@@ -64,6 +64,7 @@ It is possible to use environment variables instead of arguments to configure cl
 
 Supported environment variables:
 
+- `CONFIG_FILE`
 - `USERNAME`
 - `PASSWORD`
 - `HTTP_CLIENT`
@@ -75,6 +76,16 @@ Supported environment variables:
 - `SUCCESS_CODE`
 - `TEST_SUCCESS_CODE`
 
+## DOCKER IMAGE
+
+An alpine based docker image (~9MB) is available for ease of use and deployment.
+
+```bash
+docker run -it --rm \
+    -e USERNAME="test" \
+    -e PASSWORD="test" \
+    pooya/clogin login
+```
 
 ## DEVELOPMENT
 

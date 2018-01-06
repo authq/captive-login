@@ -128,6 +128,7 @@ usage () {
     Captive-portal login utility for headless environments written in pure bash
 
     Options:
+        -f, --conf              Path to config file (Defaults to "clogin.conf")
         -u, --username <val>    Set login username
         -p, --password <val>    Set login password
         -c, --client <val>      Set http client to make requests. (Possible values: auto|curl|wget)
@@ -142,6 +143,7 @@ usage () {
         -x, --debug             Debug mode. Shows all internal invoked commands
 
     Supported environment variables:
+        - CONFIG_FILE
         - USERNAME
         - PASSWORD
         - HTTP_CLIENT
@@ -182,6 +184,18 @@ err() {
     exit 1
 }
 
+readconf () {
+    local file=$1
+
+    for line in `cat $file | grep "^[A-Z]"`; do
+        key=`echo $line|cut -d '=' -f1`
+        val=`echo $line|cut -d '=' -f2`
+        if [ ! -z "$key" ] && [ ! -z "$val" ] ; then
+            export $key=$val
+        fi
+    done
+}
+
 #------------------------------------------------------
 # Entrypoint
 #------------------------------------------------------
@@ -197,6 +211,7 @@ export ALLOW_EMPTY=${ALLOW_EMPTY:-0}
 export SUCCESS_CODE=${SUCCESS_CODE:-302}
 export TEST_URL=${TEST_URL:-"http://icanhazip.com"}
 export TEST_SUCCESS_CODE=${TEST_SUCCESS_CODE:-200}
+export CONFIG_FILE=${CONFIG_FILE:-"clogin.conf"}
 
 # Get and validate command
 COMMAND=$1
@@ -208,14 +223,21 @@ case $COMMAND in
     *) die "Unknown command: $COMMAND"; exit 1 ;;
 esac
 
+# Try to apply configuarion files from standard locations before parsing options
+for file in "/usr/local/etc/clogin.conf" "/etc/clogin.conf" "~/.clogin.conf"; do
+    [ ! -r $file ] && continue
+    readconf $file
+done
+
 # Parse options
 while [ $# -gt 0 ]; do
     case "$1" in
+        -f|--conf)              shift; CONFIG_FILE=$1; shift ;;
         -u|--username)          shift; USERNAME=$1; shift ;;
         -p|--password)          shift; PASSWORD=$1; shift ;;
         -c|--client)            shift; HTTP_CLIENT=$1; shift ;;
-        --test-url)            shift; TEST_URL=$1; shift ;;
-        --test-success-code)   shift; TEST_SUCCESS_CODE=$1; shift ;;
+        --test-url)             shift; TEST_URL=$1; shift ;;
+        --test-success-code)    shift; TEST_SUCCESS_CODE=$1; shift ;;
         --base)                 shift; BASE_URL=$1; shift ;;
         --login-endpoint)       shift; LOGIN_ENDPOINT=$1; shift ;;
         --logout-endpoint)      shift; LOGOUT_ENDPOINT=$1; shift ;;
@@ -231,7 +253,12 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-# 3. Chooce the best HTTP_CLIENT if set to auto
+# Apply config file, if provided
+if [ -r $CONFIG_FILE ]; then
+    readconf $CONFIG_FILE
+fi
+
+# Chooce the best HTTP_CLIENT if set to auto
 if [ ! -x "$(command -v ${HTTP_CLIENT})" ] && [ "${HTTP_CLIENT}" = "auto" ] ; then
     if [ -x "$(command -v curl)" ]; then
         HTTP_CLIENT="curl"
