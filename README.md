@@ -8,7 +8,7 @@ At [Amirkabir](https://www.aut.ac.ir/aut/) university, we have a captive portal 
 
 ## Getting started
 
-Download script:
+**Download script:**
 
 ```bash
 wget https://raw.githubusercontent.com/pi0/headless-login/master/bin/hlogin
@@ -16,22 +16,35 @@ chmod +x hlogin
 sudo mv hlogin /usr/local/bin
 ```
 
-Login: 
+**Login:**
+
+We can also ommit username or password params and enter them interactively.
 
 ```bash
 hlogin login -u test -p test
 ```
 
-Test internet connectivity:
+**Test internet connectivity:**
 
 ```bash
 hlogin check
 ```
 
-Logout:
+**Logout:**
 
 ```bash
 hlogin logout
+```
+
+## Docker image
+
+An alpine based docker image is also available for ease of use and deployment.
+
+```bash
+docker run -it --rm \
+        -e USERNAME="test" \
+        -e PASSWORD="test" \
+        pooya/hlogin login
 ```
 
 ## Usage
@@ -56,7 +69,7 @@ Option                   | Description
 `-v, --version`          | Display version
 `-x, --debug`            | Debug mode. Shows all internal invoked commands
 
-## Environment variables
+### Environment variables
 
 It is possible to use Environment variables instead of arguments to configure hlogin.
 Currently supported environment variables:
@@ -71,6 +84,13 @@ Currently supported environment variables:
 - `ALLOW_EMPTY`
 - `SUCCESS_CODE`
 - `CHECK_SUCCESS_CODE`
+
+## Behind the scenes
+
+Login process is done by sending a HTTP(S) `POST` request to `/login` endpoint of captive portal containing `username` and `password` fields. Logout is also done by sending a `GET` request to `/logout` endpoint.
+Both success if HTTP response code is `302` (Mikrotik spec) is returned.
+The connectivity check also successes when `GET` requst to test url is `200`.
+For detailed info of how this script works, see sourcecode [bin/hlogin](bin/hlogin). 
 
 ## Development
 
