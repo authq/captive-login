@@ -5,15 +5,19 @@
 `Usage: clogin login|logout|loop|test [--help] [OPTION...]`
 
 Login:
+
 `clogin login -u test -p test`
 
 Test connectivity:
+
 `clogin test`
 
 Continuesly check login state:
+
 `clogin loop -u test -p test`
 
 Logout:
+
 `clogin logout`
 
 ## INSTALL
