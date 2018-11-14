@@ -117,6 +117,10 @@ Available Makefile commands:
 
 Feel free forking this repository and making PRs for features and fixes :)
 
+## RELATED PROJECTS
+
+- [Reyhoon Hotspot Login](https://github.com/mamal72/reyhoon-hotspot-login) - A simple http client written in go to log us in with less pain and effort.
+
 ## LICENSE
 
 Copyright (C) 2018 Pooya Parsa <pooya@pi0.ir>
