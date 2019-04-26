@@ -120,6 +120,7 @@ Feel free forking this repository and making PRs for features and fixes :)
 ## RELATED PROJECTS
 
 - [Reyhoon Hotspot Login](https://github.com/mamal72/reyhoon-hotspot-login) - A simple http client written in go to log us in with less pain and effort.
+- [Mili](https://github.com/SadeghHayeri/Mili) - Mili is an open source tool for auto login hotspot pages! (MacOS + Linux)
 
 ## LICENSE
 
